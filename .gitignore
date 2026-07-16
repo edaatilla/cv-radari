@@ -1,7 +1,7 @@
-backend/venv/
-backend/storage/uploads/
-backend/storage/renders/
-backend/storage/*.db
+venv/
+storage/uploads/
+storage/renders/
+storage/*.db
 __pycache__/
 *.pyc
 .claude/

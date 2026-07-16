@@ -1,1 +1,8 @@
--r backend/requirements.txt
+fastapi
+uvicorn[standard]
+python-multipart
+pymupdf
+sentence-transformers
+transformers
+torch
+numpy

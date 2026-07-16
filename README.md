@@ -17,15 +17,23 @@ CV sayfalarını görüntü olarak sunan FastAPI servisi.
 - Aday adı çıkarma (Türkçe NER): `savasy/bert-base-turkish-ner-cased`
 - DOCX → PDF: LibreOffice (headless)
 
-Arayüz (`backend/static/index.html`) da bu Space'in kendisinden `/` yolunda servis edilir —
-ayrı bir GitHub Pages barındırmasına gerek yok, tek link her şeyi kapsar. Bu Space uyandığında
-(soğuk başlangıç) ilk istek birkaç saniye/dakika sürebilir (modeller ilk açılışta indirilir),
-ücretsiz katmanda yeniden başlatıldığında yüklenen CV'ler silinir (demo amaçlı, kalıcı depolama yok).
+Arayüz (`index.html`) de bu Space'in kendisinden `/` yolunda servis edilir — ayrı bir GitHub
+Pages barındırmasına gerek yok, tek link her şeyi kapsar. Bu Space uyandığında (soğuk başlangıç)
+ilk istek birkaç saniye/dakika sürebilir (modeller ilk açılışta indirilir), ücretsiz katmanda
+yeniden başlatıldığında yüklenen CV'ler silinir (demo amaçlı, kalıcı depolama yok).
 
 API dokümantasyonu: `/docs`
+
+## Proje yapısı
+```
+app.py            FastAPI uygulaması + veritabanı + ML hattı (tek dosya)
+index.html         Arayüz
+requirements.txt   Python bağımlılıkları
+packages.txt        LibreOffice (apt üzerinden kurulur)
+```
 
 ## Dağıtım notu
 Bu Space **Gradio SDK** ile (Docker değil) çalışacak şekilde ayarlandı — Hugging Face'in Docker
 SDK'sı kart bilgisi istediği için, kartsız/tamamen ücretsiz kalması amacıyla bu yol seçildi.
-`app.py`, Gradio'yu hiç kullanmadan doğrudan `backend/app/main.py`'deki FastAPI uygulamasını
-uvicorn ile başlatır; `packages.txt` LibreOffice'i apt üzerinden kurar.
+`app.py`, Gradio'yu hiç kullanmadan doğrudan kendi içindeki FastAPI uygulamasını uvicorn ile
+başlatır; `packages.txt` LibreOffice'i apt üzerinden kurar.
