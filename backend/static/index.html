@@ -327,9 +327,9 @@ nav.tabs button.active{
 </aside>
 
 <script>
-// TODO: Hugging Face Space'i oluşturduktan sonra bu URL'i kendi Space adresinle değiştir.
-// Örnek: https://KULLANICI_ADIN-cv-radari-backend.hf.space
-const API_BASE = "https://YOUR-USERNAME-cv-radari-backend.hf.space";
+// Frontend ve backend aynı Hugging Face Space'ten (tek origin) servis edildiği için
+// mutlak bir adrese gerek yok, doğrudan /api/... yeterli.
+const API_BASE = "";
 
 const CATS = [
   {key:'tek', name:'Teknoloji', color:'var(--tek)'},

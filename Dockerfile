@@ -16,6 +16,7 @@ COPY --chown=user backend/requirements.txt .
 RUN pip install --no-cache-dir --user -r requirements.txt
 
 COPY --chown=user backend/app ./app
+COPY --chown=user backend/static ./static
 
 # Modelleri build zamanında indirip image'a göm — çalışma anında (soğuk başlangıçta) tekrar indirmesin.
 RUN python -m app.download_models

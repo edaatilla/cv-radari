@@ -17,9 +17,9 @@ CV sayfalarını görüntü olarak sunan FastAPI servisi.
 - Aday adı çıkarma (Türkçe NER): `savasy/bert-base-turkish-ner-cased`
 - DOCX → PDF: LibreOffice (headless)
 
-Bu repo aynı zamanda `index.html` üzerinden GitHub Pages'te yayınlanan statik arayüzü de içerir;
-arayüz bu backend'in `/api/*` uçlarına istek atar. Bu Space uyandığında (soğuk başlangıç) ilk
-istek birkaç saniye sürebilir, ücretsiz katmanda yeniden başlatıldığında yüklenen CV'ler silinir
-(demo amaçlı, kalıcı depolama yok).
+Arayüz (`backend/static/index.html`) da bu Space'in kendisinden `/` yolunda servis edilir —
+ayrı bir GitHub Pages barındırmasına gerek yok, tek link her şeyi kapsar. Bu Space uyandığında
+(soğuk başlangıç) ilk istek birkaç saniye sürebilir, ücretsiz katmanda yeniden başlatıldığında
+yüklenen CV'ler silinir (demo amaçlı, kalıcı depolama yok).
 
 API dokümantasyonu: `/docs`

@@ -32,9 +32,17 @@ def on_startup():
     db.init_db()
 
 
+FRONTEND_PATH = Path(__file__).resolve().parent.parent / "static" / "index.html"
+
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+
+@app.get("/")
+def frontend():
+    return FileResponse(FRONTEND_PATH, media_type="text/html")
 
 
 def _base_name(cv) -> str:
