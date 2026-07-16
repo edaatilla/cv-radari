@@ -28,6 +28,4 @@ API dokümantasyonu: `/docs`
 Bu Space **Gradio SDK** ile (Docker değil) çalışacak şekilde ayarlandı — Hugging Face'in Docker
 SDK'sı kart bilgisi istediği için, kartsız/tamamen ücretsiz kalması amacıyla bu yol seçildi.
 `app.py`, Gradio'yu hiç kullanmadan doğrudan `backend/app/main.py`'deki FastAPI uygulamasını
-uvicorn ile başlatır; `packages.txt` LibreOffice'i apt üzerinden kurar. Kart eklemek istemeyen
-herkes için bu, Docker'a eşdeğer bir kurulum sağlar. (İstersen kök dizindeki `Dockerfile` hâlâ
-duruyor — kart eklersen Docker SDK'ya geçip onu da kullanabilirsin.)
+uvicorn ile başlatır; `packages.txt` LibreOffice'i apt üzerinden kurar.
