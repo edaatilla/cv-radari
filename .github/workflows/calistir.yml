@@ -1,0 +1,42 @@
+name: CV Radarı'nı Çalıştır (genel link üret)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: LibreOffice'i kur
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq libreoffice
+
+      - name: Python bağımlılıklarını kur
+        run: pip install -q -r requirements.txt
+
+      - name: Tünel aracını indir
+        run: |
+          wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -O cloudflared
+          chmod +x cloudflared
+
+      - name: Uygulamayı başlat ve genel linki üret
+        run: |
+          python app.py &
+          sleep 10
+          ./cloudflared tunnel --url http://localhost:7860 > tunnel.log 2>&1 &
+          sleep 12
+          echo ""
+          echo "================================================"
+          echo " UYGULAMA LINKIN (bunu paylas):"
+          grep -o 'https://[a-zA-Z0-9-]*\.trycloudflare\.com' tunnel.log | head -1
+          echo "================================================"
+          echo ""
+          echo "Bu link, bu calisma (run) devam ettigi surece aktif kalir."
+          echo "Yaklasik 5-6 saat sonra ya da bu sayfadan 'Cancel workflow' dedigin an link durur."
+          sleep 20000
