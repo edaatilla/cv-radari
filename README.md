@@ -3,8 +3,8 @@ title: CV Radarı Backend
 emoji: 🗂️
 colorFrom: blue
 colorTo: gray
-sdk: docker
-app_port: 7860
+sdk: gradio
+app_file: app.py
 pinned: false
 ---
 
@@ -19,7 +19,15 @@ CV sayfalarını görüntü olarak sunan FastAPI servisi.
 
 Arayüz (`backend/static/index.html`) da bu Space'in kendisinden `/` yolunda servis edilir —
 ayrı bir GitHub Pages barındırmasına gerek yok, tek link her şeyi kapsar. Bu Space uyandığında
-(soğuk başlangıç) ilk istek birkaç saniye sürebilir, ücretsiz katmanda yeniden başlatıldığında
-yüklenen CV'ler silinir (demo amaçlı, kalıcı depolama yok).
+(soğuk başlangıç) ilk istek birkaç saniye/dakika sürebilir (modeller ilk açılışta indirilir),
+ücretsiz katmanda yeniden başlatıldığında yüklenen CV'ler silinir (demo amaçlı, kalıcı depolama yok).
 
 API dokümantasyonu: `/docs`
+
+## Dağıtım notu
+Bu Space **Gradio SDK** ile (Docker değil) çalışacak şekilde ayarlandı — Hugging Face'in Docker
+SDK'sı kart bilgisi istediği için, kartsız/tamamen ücretsiz kalması amacıyla bu yol seçildi.
+`app.py`, Gradio'yu hiç kullanmadan doğrudan `backend/app/main.py`'deki FastAPI uygulamasını
+uvicorn ile başlatır; `packages.txt` LibreOffice'i apt üzerinden kurar. Kart eklemek istemeyen
+herkes için bu, Docker'a eşdeğer bir kurulum sağlar. (İstersen kök dizindeki `Dockerfile` hâlâ
+duruyor — kart eklersen Docker SDK'ya geçip onu da kullanabilirsin.)
