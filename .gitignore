@@ -1,0 +1,7 @@
+backend/venv/
+backend/storage/uploads/
+backend/storage/renders/
+backend/storage/*.db
+__pycache__/
+*.pyc
+.claude/

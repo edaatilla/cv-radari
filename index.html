@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>CV Radarı</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
+
+:root{
+  --paper:#F6F3EC;
+  --ink:#1C2333;
+  --navy:#1B2A4A;
+  --navy-2:#2B3E63;
+  --gold:#B8892B;
+  --line:#DCD5C6;
+  --card:#FFFFFF;
+  --tek:#2B6E63;   /* teknoloji */
+  --sag:#B04A3C;   /* sağlık */
+  --egt:#3A5CA8;   /* eğitim */
+  --fin:#8A6D1E;   /* finans */
+  --paz:#7A4A8A;   /* pazarlama */
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Inter',sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:36px 28px 80px;}
+
+header.app{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  border-bottom:2px solid var(--navy);
+  padding-bottom:18px;margin-bottom:28px;
+  flex-wrap:wrap;gap:14px;
+}
+header.app h1{
+  font-family:'Fraunces',serif;
+  font-weight:700;
+  font-size:34px;
+  margin:0;
+  color:var(--navy);
+  letter-spacing:-0.5px;
+}
+header.app .tag{
+  font-size:13px;color:#6b6656;max-width:360px;line-height:1.4;
+}
+.upload-trigger{
+  display:flex;align-items:center;gap:8px;
+  font-family:'Fraunces',serif;font-weight:600;font-size:14.5px;
+  background:var(--gold);color:#fff;border:none;
+  padding:12px 20px;border-radius:9px;cursor:pointer;
+  white-space:nowrap;
+  transition:background .15s ease, transform .15s ease;
+}
+.upload-trigger:hover{background:#a37a26;transform:translateY(-1px);}
+.upload-trigger .plus{font-size:17px;font-weight:700;line-height:1;}
+
+.drawer-overlay{
+  position:fixed;inset:0;background:rgba(20,20,10,.38);
+  opacity:0;pointer-events:none;transition:opacity .25s ease;
+  z-index:60;
+}
+.drawer-overlay.open{opacity:1;pointer-events:auto;}
+
+.drawer{
+  position:fixed;top:0;left:0;height:100vh;width:380px;max-width:88vw;
+  background:var(--paper);
+  border-right:2px solid var(--navy);
+  box-shadow:12px 0 30px rgba(20,20,10,.15);
+  transform:translateX(-100%);
+  transition:transform .3s ease;
+  z-index:70;
+  padding:26px 22px;
+  overflow-y:auto;
+}
+.drawer.open{transform:translateX(0);}
+.drawer-head{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:20px;
+  padding-bottom:14px;
+  border-bottom:2px solid var(--navy);
+}
+.drawer-title{font-family:'Fraunces',serif;font-weight:700;font-size:21px;color:var(--navy);}
+.drawer-close{
+  background:none;border:none;font-size:26px;line-height:1;color:var(--navy);
+  cursor:pointer;padding:0 4px;
+}
+
+nav.tabs{display:flex;gap:6px;margin-bottom:28px;}
+nav.tabs button{
+  font-family:'Fraunces',serif;
+  font-size:15px;font-weight:600;
+  padding:11px 22px;
+  border:2px solid var(--navy);
+  border-bottom:none;
+  background:var(--paper);
+  color:var(--navy);
+  cursor:pointer;
+  border-radius:8px 8px 0 0;
+  position:relative;top:2px;
+}
+nav.tabs button.active{
+  background:var(--navy);color:#fff;
+}
+
+.panel{display:none;border-top:2px solid var(--navy);padding-top:26px;}
+.panel.active{display:block;}
+
+/* ---------- CV YÜKLE ---------- */
+.dropzone{
+  border:2px dashed var(--navy);
+  border-radius:14px;
+  background:#fff;
+  padding:44px 24px;
+  text-align:center;
+  cursor:pointer;
+  transition:background .15s ease, border-color .15s ease;
+}
+.dropzone.drag{background:#EFE9DA;border-color:var(--gold);}
+.dropzone .dz-title{
+  font-family:'Fraunces',serif;font-weight:600;font-size:18px;color:var(--navy);margin-bottom:6px;
+}
+.dropzone .dz-sub{font-size:12.5px;color:#8a836e;}
+.dz-btn{
+  display:inline-block;
+  margin-top:18px;
+  padding:11px 26px;
+  background:var(--navy);color:#fff;
+  border-radius:9px;
+  font-family:'Fraunces',serif;font-weight:600;font-size:14px;
+  transition:background .15s ease;
+}
+.dropzone:hover .dz-btn{background:var(--navy-2);}
+.dropzone input{display:none;}
+
+.upload-list{margin-top:22px;display:flex;flex-direction:column;gap:10px;}
+.upload-row{
+  display:flex;align-items:center;gap:14px;
+  background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:12px 16px;
+}
+.upload-row .fname{
+  flex:1;min-width:0;font-size:13.5px;font-weight:600;color:var(--ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.upload-row .status{
+  font-size:12px;font-weight:600;white-space:nowrap;display:flex;align-items:center;gap:7px;
+}
+.spinner{
+  width:13px;height:13px;border-radius:50%;
+  border:2px solid var(--line);border-top-color:var(--gold);
+  animation:spin .7s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+.badge{
+  font-size:11px;font-weight:700;color:#fff;padding:3px 10px;border-radius:20px;
+}
+.upload-row .extracted{font-size:12px;color:#8a836e;}
+
+/* ---------- KATEGORİLER (yan yana) ---------- */
+.cat-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+}
+@media(max-width:900px){.cat-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:600px){.cat-grid{grid-template-columns:1fr;}}
+
+.cat-card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 1px 2px rgba(20,20,10,.04);
+  display:flex;flex-direction:column;
+}
+.cat-head{
+  padding:14px 16px;
+  color:#fff;
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:'Fraunces',serif;font-weight:600;font-size:16px;
+}
+.cat-head span.count{
+  font-family:'Inter',sans-serif;font-weight:600;font-size:12px;
+  background:rgba(255,255,255,.22);
+  padding:3px 9px;border-radius:20px;
+}
+.cat-thumbs{
+  padding:14px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.cv-thumb{
+  aspect-ratio:3/4;
+  border-radius:6px;
+  border:1px solid var(--line);
+  background:#fff;
+  position:relative;
+  overflow:hidden;
+  cursor:pointer;
+  transition:transform .15s ease;
+}
+.cv-thumb:hover{transform:translateY(-3px);box-shadow:0 6px 14px rgba(20,20,10,.12);}
+.cv-thumb .name-tag{
+  position:absolute;bottom:0;left:0;right:0;
+  background:rgba(28,35,51,.86);color:#fff;
+  font-size:10.5px;font-weight:600;
+  padding:4px 6px;text-align:center;
+  font-family:'Inter',sans-serif;
+}
+
+/* ---------- EN UYGUN ADAYLAR ---------- */
+.search-row{
+  display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;
+}
+.search-row input{
+  flex:1;min-width:260px;
+  padding:13px 16px;
+  border:2px solid var(--navy);
+  border-radius:9px;
+  font-size:14px;font-family:'Inter',sans-serif;
+  background:#fff;
+}
+.search-row button{
+  padding:13px 24px;
+  background:var(--navy);color:#fff;border:none;border-radius:9px;
+  font-family:'Fraunces',serif;font-weight:600;font-size:14.5px;
+  cursor:pointer;
+}
+.search-row button:hover{background:var(--navy-2);}
+.hint{font-size:12px;color:#8a836e;margin:-16px 0 22px;}
+
+.cand-card{
+  display:flex;gap:20px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:18px;
+  margin-bottom:16px;
+  box-shadow:0 1px 2px rgba(20,20,10,.04);
+}
+.cand-photo{
+  flex:0 0 118px;
+  width:118px;aspect-ratio:3/4;
+  border-radius:8px;overflow:hidden;position:relative;border:1px solid var(--line);
+  cursor:pointer;
+}
+.cand-body{flex:1;min-width:0;}
+.cand-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;}
+.cand-name{
+  font-family:'Fraunces',serif;font-weight:700;font-size:20px;color:var(--navy);
+}
+.cand-role{font-size:12.5px;color:#8a836e;margin-top:2px;}
+.match{
+  font-family:'Fraunces',serif;font-weight:700;font-size:15px;
+  color:var(--gold);white-space:nowrap;
+}
+.ai-note{
+  margin-top:12px;
+  background:#F1ECE0;
+  border-left:3px solid var(--gold);
+  padding:10px 13px;
+  border-radius:0 8px 8px 0;
+  font-size:13px;line-height:1.55;
+}
+.ai-note b{color:var(--navy);}
+.tags{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;}
+.tags span{
+  font-size:11px;background:var(--paper);border:1px solid var(--line);
+  padding:3px 9px;border-radius:20px;color:#5b563f;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="app">
+    <div>
+      <h1>CV Radarı</h1>
+      <div class="tag">Yüklenen CV'leri otomatik kategorize eder, aradığın özelliklere göre en uygun adayları bulur.</div>
+    </div>
+    <button class="upload-trigger" id="openDrawer">
+      <span class="plus">+</span> CV Yükle
+    </button>
+  </header>
+
+  <nav class="tabs">
+    <button class="active" data-tab="uygun">Aday Ara</button>
+    <button data-tab="kategoriler">Kategorilere Göre CV'ler</button>
+  </nav>
+
+  <!-- ================= ADAY ARA ================= -->
+  <section class="panel active" id="uygun">
+    <div class="search-row">
+      <input id="searchInput" type="text" placeholder="Aranan özellikler (örn: Python, SQL, 3+ yıl deneyim, liderlik)">
+      <button onclick="runSearch()">Adayları Bul</button>
+    </div>
+    <div class="hint">Arama, CV metinleriyle çok dilli bir embedding modeli (paraphrase-multilingual-MiniLM) üzerinden anlamsal olarak eşleştirilir.</div>
+    <div id="candList"></div>
+  </section>
+
+  <!-- ================= KATEGORİLER ================= -->
+  <section class="panel" id="kategoriler">
+    <div class="cat-grid" id="catGrid"></div>
+  </section>
+
+</div>
+
+<!-- ================= CV YÜKLE (soldan açılan çekmece) ================= -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<aside class="drawer" id="uploadDrawer">
+  <div class="drawer-head">
+    <div class="drawer-title">CV Yükle</div>
+    <button class="drawer-close" id="closeDrawer">&times;</button>
+  </div>
+  <label class="dropzone" id="dropzone">
+    <div class="dz-title">CV'leri buraya sürükle bırak</div>
+    <div class="dz-sub">.pdf, .docx — birden fazla dosya seçebilirsin. Yüklenen her CV otomatik okunup kategoriye ayrılır.</div>
+    <span class="dz-btn" type="button">Dosya Seç</span>
+    <input type="file" id="fileInput" multiple accept=".pdf,.docx,.doc">
+  </label>
+  <div class="upload-list" id="uploadList"></div>
+</aside>
+
+<script>
+// TODO: Hugging Face Space'i oluşturduktan sonra bu URL'i kendi Space adresinle değiştir.
+// Örnek: https://KULLANICI_ADIN-cv-radari-backend.hf.space
+const API_BASE = "https://YOUR-USERNAME-cv-radari-backend.hf.space";
+
+const CATS = [
+  {key:'tek', name:'Teknoloji', color:'var(--tek)'},
+  {key:'sag', name:'Sağlık', color:'var(--sag)'},
+  {key:'egt', name:'Eğitim', color:'var(--egt)'},
+  {key:'fin', name:'Finans', color:'var(--fin)'},
+  {key:'paz', name:'Pazarlama', color:'var(--paz)'},
+];
+
+function thumbHTML(c, catColor){
+  return `<div class="cv-thumb" title="${c.name}" onclick="window.open('${API_BASE}${c.thumbnail_url}','_blank')">
+    <img src="${API_BASE}${c.thumbnail_url}" alt="${c.name}" style="width:100%;height:100%;object-fit:cover;display:block;">
+    <div class="name-tag">${c.name}</div>
+  </div>`;
+}
+
+function renderCategories(){
+  const grid = document.getElementById('catGrid');
+  fetch(`${API_BASE}/api/categories`)
+    .then(res=>res.json())
+    .then(data=>{
+      grid.innerHTML = data.map(cat=>{
+        const color = CATS.find(c=>c.key===cat.key).color;
+        return `<div class="cat-card">
+          <div class="cat-head" style="background:${color}">
+            <span>${cat.name}</span><span class="count">${cat.count} CV</span>
+          </div>
+          <div class="cat-thumbs">
+            ${cat.cvs.map(c=>thumbHTML(c, color)).join('') || '<div style="grid-column:1/-1;font-size:12px;color:#999;padding:8px 0;">Bu alanda henüz CV yok</div>'}
+          </div>
+        </div>`;
+      }).join('');
+    })
+    .catch(()=>{
+      grid.innerHTML = '<div class="hint">Backend\'e ulaşılamadı. Sunucu uyanıyor olabilir, birkaç saniye sonra sayfayı yenile.</div>';
+    });
+}
+
+function candCardHTML(c){
+  const cat = CATS.find(x=>x.key===c.cat);
+  return `<div class="cand-card">
+    <div class="cand-photo" onclick="window.open('${API_BASE}${c.thumbnail_url}','_blank')">
+      <img src="${API_BASE}${c.thumbnail_url}" alt="${c.name}" style="width:100%;height:100%;object-fit:cover;display:block;">
+    </div>
+    <div class="cand-body">
+      <div class="cand-top">
+        <div>
+          <div class="cand-name">${c.name}</div>
+          <div class="cand-role">${c.role} · ${cat.name}</div>
+        </div>
+        <div class="match">${c.match === null || c.match === undefined ? '' : '%' + c.match + ' uyum'}</div>
+      </div>
+      <div class="tags">${c.tags.map(t=>`<span>${t}</span>`).join('')}</div>
+      <div class="ai-note">
+        <b>Gelişmiş olduğu alanlar:</b> ${c.strong}.<br>
+        <b>Gelişime açık alanlar:</b> ${c.grow}.
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderCandidates(list){
+  document.getElementById('candList').innerHTML = list.length
+    ? list.map(candCardHTML).join('')
+    : '<div class="hint">Henüz aday yok — önce CV yükle.</div>';
+}
+
+function runSearch(){
+  const q = document.getElementById('searchInput').value.trim();
+  document.getElementById('candList').innerHTML = '<div class="hint">Aranıyor…</div>';
+  fetch(`${API_BASE}/api/search`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({query: q}),
+  })
+    .then(res=>res.json())
+    .then(list=>renderCandidates(list))
+    .catch(()=>{
+      document.getElementById('candList').innerHTML = '<div class="hint">Backend\'e ulaşılamadı. Sunucu uyanıyor olabilir, birkaç saniye sonra tekrar dene.</div>';
+    });
+}
+
+/* ---------- CV YÜKLE mantığı ---------- */
+let uploadCount = 0;
+
+function handleFiles(files){
+  const list = document.getElementById('uploadList');
+  Array.from(files).forEach(file=>{
+    uploadCount++;
+    const rowId = 'up' + uploadCount;
+    const row = document.createElement('div');
+    row.className = 'upload-row';
+    row.id = rowId;
+    row.innerHTML = `
+      <div class="fname">${file.name}</div>
+      <div class="extracted"></div>
+      <div class="status"><div class="spinner"></div> İşleniyor…</div>
+    `;
+    list.prepend(row);
+
+    const fd = new FormData();
+    fd.append('files', file);
+
+    fetch(`${API_BASE}/api/cvs`, {method: 'POST', body: fd})
+      .then(async res=>{
+        if(!res.ok){
+          const err = await res.json().catch(()=>({detail:'Bilinmeyen hata'}));
+          throw new Error(err.detail || 'Yükleme başarısız');
+        }
+        return res.json();
+      })
+      .then(results=>{
+        const c = results[0];
+        const cat = CATS.find(x=>x.key===c.cat);
+        const r = document.getElementById(rowId);
+        r.querySelector('.extracted').textContent = c.name;
+        r.querySelector('.status').innerHTML = `<span class="badge" style="background:${cat.color}">${cat.name}</span>`;
+        renderCategories();
+        runSearch();
+      })
+      .catch(err=>{
+        const r = document.getElementById(rowId);
+        r.querySelector('.status').innerHTML = `<span class="badge" style="background:#B04A3C">Hata</span>`;
+        r.querySelector('.extracted').textContent = err.message;
+      });
+  });
+}
+
+const dz = document.getElementById('dropzone');
+const fileInput = document.getElementById('fileInput');
+fileInput.addEventListener('change', e=>handleFiles(e.target.files));
+['dragenter','dragover'].forEach(ev=>dz.addEventListener(ev, e=>{e.preventDefault();dz.classList.add('drag');}));
+['dragleave','drop'].forEach(ev=>dz.addEventListener(ev, e=>{e.preventDefault();dz.classList.remove('drag');}));
+dz.addEventListener('drop', e=>{ if(e.dataTransfer.files.length) handleFiles(e.dataTransfer.files); });
+
+const drawer = document.getElementById('uploadDrawer');
+const overlay = document.getElementById('drawerOverlay');
+function openDrawer(){drawer.classList.add('open');overlay.classList.add('open');}
+function closeDrawerFn(){drawer.classList.remove('open');overlay.classList.remove('open');}
+document.getElementById('openDrawer').addEventListener('click', openDrawer);
+document.getElementById('closeDrawer').addEventListener('click', closeDrawerFn);
+overlay.addEventListener('click', closeDrawerFn);
+
+document.querySelectorAll('nav.tabs button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+renderCategories();
+runSearch();
+</script>
+</body>
+</html>
