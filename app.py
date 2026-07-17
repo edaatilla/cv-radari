@@ -1,12 +1,3 @@
-"""CV Radarı — tek dosyalık FastAPI backend + Hugging Face Spaces giriş noktası.
-
-CV'leri (PDF/DOCX) otomatik kategorize eder, arama sorgusuna göre en uygun adayı bulur,
-CV sayfalarını görüntü olarak sunar. Model eğitimi yok — iki hazır Hugging Face modeli
-kullanılıyor:
-  - sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2 (embedding: kategori + arama)
-  - savasy/bert-base-turkish-ner-cased (Türkçe NER: aday adı çıkarma)
-LibreOffice (packages.txt ile kurulu) DOCX -> PDF dönüşümü için kullanılıyor.
-"""
 
 import json
 import re
